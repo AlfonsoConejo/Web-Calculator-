@@ -71,10 +71,10 @@ button:hover{
     background-color: #5d9beb;
 }
 
-.operand:not(#percentage){
+.operand{
     background-color: #d35d1a;
 }
 
-.operand:not(#percentage):hover{
+.operand{
  background-color: #fa7226;
 }

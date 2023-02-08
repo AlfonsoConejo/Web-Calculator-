@@ -8,15 +8,17 @@ const resultDisplay= document.querySelector('.result');
 const lastOperationDisplay = document.querySelector('.operation');
 
 //const calculator = new Calculator(lastOperationDisplay, resultDisplay);
-let result;
-let operand;
+let result = '';
+let lastResult = '';
+let operand= undefined;
 
 function appendResult(button){
-    if (result === undefined  && button.innerText === '.'){
+    console.log(typeof(result))
+    if (result === ''  && button.innerText === '.'){
         result = '0.';
         console.log(result)
     }
-    else if (result === undefined) {
+    else if (result === '') {
         result = button.innerText;
         console.log(result)
     }
@@ -35,18 +37,19 @@ function appendResult(button){
 }
 
 function appendOperand(button){
-    if ( (result != undefined) && (result.includes('+') || result.includes('-') ||result.includes('x')||result.includes('%')||result.includes('÷'))){
+    if ( (result != '') && (result.includes('+') || result.includes('-') ||result.includes('x')||result.includes('%')||result.includes('÷'))){
         console.log('entró else if')
         return
     }
-    else if (result != undefined){
-        result = result + button.innerText
-        console.log(result)
-        resultDisplay.textContent = result;
-        console.log('Entró')
+    else if (result != ''){
+        lastResult = result + ' ' + button.innerText
+        result = ''
+        lastOperationDisplay.innerHTML = lastResult
+        resultDisplay.innerHTML = result
         operand = button.innerText
-        console.log(operand)
+        
     }
+
 }
 
 numberButtons.forEach(button => {
@@ -61,12 +64,70 @@ operandButtons.forEach(button => {
 })
 
 equalsBtn.addEventListener('click', () =>{
-        calculator.calculateOperation();
-        calculator.updateDisplay();
+
 })
 
 clearBtn.addEventListener('click', () =>{
-    result = undefined
+    result = ''
     resultDisplay.textContent = ''
-    operand = undefined
+    operand = ''
+    lastResult = ''
+    lastOperationDisplay.innerHTML = ''
+    console.log('Last result: '+ lastResult)
+    console.log('Result: '+ result)
+})
+
+deleteBtn.addEventListener('click', () =>{
+    console.log('result ' + result);
+    console.log('last result ' + lastResult);
+    if (result === '' && lastResult != '' ){
+        result = lastResult.substring(0, lastResult.length - 2);
+        lastResult = ''
+        lastOperationDisplay.innerHTML = ''
+        resultDisplay.innerHTML = result
+        console.log('result ' + result);
+        console.log('last result ' + lastResult);
+    }
+    else{
+        result = result.substring(0, result.length - 1);
+        resultDisplay.textContent = result;
+    }
+    
+})
+
+equalsBtn.addEventListener('click', () =>{
+    let previous = parseFloat(lastResult.substring(0, lastResult.length -2))
+    let current = parseFloat(result)
+    if (operand === '+' && result !== ''){
+        lastResult = ''
+        lastOperationDisplay.innerHTML = lastResult
+        result = previous + current
+        result = result.toString()
+        resultDisplay.innerHTML = result
+        operand = undefined
+    }
+    else if (operand === '-' && result !== ''){
+        lastResult = ''
+        lastOperationDisplay.innerHTML = lastResult
+        result = previous - current;
+        result = result.toString()
+        resultDisplay.innerHTML = result
+        operand = undefined
+    }
+    else if (operand === 'x' && result !== ''){
+        lastResult = ''
+        lastOperationDisplay.innerHTML = lastResult
+        result = previous * current;
+        result = result.toString()
+        resultDisplay.innerHTML = result
+        operand = undefined
+    }
+    else if (operand === '÷' && result !== ''){
+        lastResult = ''
+        lastOperationDisplay.innerHTML = lastResult
+        result = previous / current;
+        result = result.toString()
+        resultDisplay.innerHTML = result
+        operand = undefined
+    }
 })
